@@ -41,12 +41,14 @@ class LinkedList
     end
 
     def at(index, node = @head, counter = 0)
-        return node.value if counter == index
+        return "Index out of bounds" if index >= size || index < 0
+        return node if counter == index
 
         at(index, node.next_node, counter + 1)
     end
 
     def pop(node = @head)
+        return nil if node.nil?
         return node.next_node = nil if node.next_node.next_node.nil?
 
         pop(node.next_node)
@@ -61,6 +63,7 @@ class LinkedList
 
     def find(value, node = @head, index = 0)
         return index if value == node.value
+        return nil if node.next_node.nil?
 
         find(value, node.next_node, index + 1)
     end
@@ -72,9 +75,29 @@ class LinkedList
     end
 
     def insert_at(value, index)
+        return prepend(value) if index == 0
+        return "Index out of bounds" if index >= size || index < 0
+
+        new_node = Node.new(value)
+        new_node.next_node = at(index)
+        at(index - 1).next_node = new_node
+
+        new_node
     end
 
     def remove_at(index)
+        return "Index out of bounds" if index >= size || index < 0
+    
+        if index == 0
+            node = @head
+            @head = @head.next_node
+            return node
+        end
+    
+        previous_node = at(index - 1)
+        node = previous_node.next_node
+        previous_node.next_node = node.next_node
+        return node
     end
 end
 
